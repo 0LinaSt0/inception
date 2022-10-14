@@ -1,14 +1,16 @@
 FROM debian:buster
 
-WORKDIR /app
+# to install the prerequisites for the next downloading of nginx
+RUN apt-get update \
+	&& apt-get install curl \
+						gnupg2 \
+						ca-certificates \
+						lsb-release debian-archive-keyring -y;
 
-COPY . .
+COPY ./tools/startnginx.sh /home/
 
-RUN apt update -y\
-	&& apt install nginx -y
+RUN bash /home/startnginx.sh
 
-#CMD ["nginx", "-g", "daemon off;"]
-EXPOSE 80 8080
-STOPSIGNAL SIGQUIT
-#CMD ["nginx","-g","daemon off;"]
-ENTRYPOINT ["nginx", "-g", "daemon off;"]
+COPY ./conf/my_configs.conf /etc/nginx/conf.d/
+
+EXPOSE 443

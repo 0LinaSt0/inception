@@ -10,14 +10,17 @@ RUN apt-get update -y\
 
 # To copy configuration for mariadb and create_database_sql_script
 COPY ./conf/50-server.cnf /etc/mysql/mariadb.conf.d/50-server.cnf
-COPY ./tools/createmdb.sql /var/www
+ADD ./tools/createmdb.sh /home/
+#COPY ./tools/createmdb.sql ./var/www
 
 # To open needing port
 EXPOSE 3306
 
 # To execute the start for mariadb and run create_database_sql_script
 # in a new layer on top of the current image
-RUN systemctl start mysql; mysql < /var/www/createmdb.sql
+RUN service mysql start \
+	&& bash /home/createmdb.sh
+#RUN systemctl start mysql; mysql < /var/www/createmdb.sql
 
 # To startup mysql server after the container starts
 #.note: the "mysqld_safe" command is special script for startup 

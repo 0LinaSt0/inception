@@ -2,14 +2,15 @@
 FROM debian:buster
 
 # To copy scripts for installing PHP and istalling and starting WP
-COPY ./tools/phpinsall.sh /home/
+COPY ./tools/phpinstall.sh /home/
 COPY ./tools/startwp.sh /home/
 
 # To execute the installation of systemd, curl and PHP
 RUN apt-get update -y \
 	&& apt-get install systemd -y \
-	&& apt-get install curl \
-	&& bash /home/phpinsall.sh
+	&& apt-get install curl -y\
+	&& apt-get install wget -y\
+	&& bash /home/phpinstall.sh
 
 # To copy configs for PHP
 COPY ./conf/www.conf /etc/php/7.2/fpm/pool.d/

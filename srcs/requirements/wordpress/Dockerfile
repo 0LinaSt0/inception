@@ -5,11 +5,19 @@ FROM debian:buster
 COPY ./tools/phpinstall.sh /home/
 COPY ./tools/startwp.sh /home/
 
-# To execute the installation of systemd, curl and PHP
-RUN apt-get update -y \
+# To execute the installation of systemd, curl, wget, MDB_client and PHP
+RUN echo "\033[32m ...wp: UPDATE INSTALLER:\033[0m" \
+	&& apt-get update -y \
+	&& echo "\033[32m ...wp: INSTALL SYSTEMD:\033[0m" \
 	&& apt-get install systemd -y \
+	&& echo "\033[32m ...wp: INSTALL CURL:\033[0m" \
 	&& apt-get install curl -y\
-	&& apt-get install wget -y\
+	&& echo "\033[32m ...wp: INSTALL WGET:\033[0m" \
+	&& apt-get install wget -y \
+	&& echo "\033[32m ...wp: UPDATE INSTALLER:\033[0m" \
+	&& apt-get update \
+	&& echo "\033[32m ...mdb: INSTALL MARIADB_CLIENT:\033[0m" \
+	&& apt-get install mariadb-client -y \
 	&& bash /home/phpinstall.sh
 
 # To copy configs for PHP

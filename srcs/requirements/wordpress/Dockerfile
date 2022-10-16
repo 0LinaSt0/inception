@@ -17,7 +17,7 @@ RUN echo "\033[32m ...wp: UPDATE INSTALLER:\033[0m" \
 	&& echo "\033[32m ...wp: UPDATE INSTALLER:\033[0m" \
 	&& apt-get update \
 	&& echo "\033[32m ...mdb: INSTALL MARIADB_CLIENT:\033[0m" \
-	&& apt-get install mariadb-client -y \
+	#&& apt-get install mariadb-client -y \
 	&& bash /home/phpinstall.sh
 
 # To copy configs for PHP

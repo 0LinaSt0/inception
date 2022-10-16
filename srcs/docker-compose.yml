@@ -3,9 +3,10 @@ services:
   mariadb:
     container_name: mariadb
     build: ./requirements/mariadb
-    init: true
-    volumes:
-      - db:/var/lib/mysql
+    #volumes:
+    #  - db:/var/lib/mysql
+   # ports:
+    # - "3306:3306"
     networks:
       - inseption
     restart: always
@@ -13,8 +14,10 @@ services:
   wordpress:
     container_name: wordpress
     build: ./requirements/wordpress
-    volumes:
-      - wp:/var/www/html/wordpress
+    #volumes:
+     # - wp:/var/www/html/wordpress
+    ports:
+      - "9000:9000"
     networks:
       - inseption
     depends_on:
@@ -26,8 +29,8 @@ services:
   nginx:
     container_name: nginx
     build: ./requirements/nginx
-    volumes:
-      - wp:/var/www/html/wordpress
+    #volumes:
+     # - wp:/var/www/html/wordpress
     networks:
       - inseption
     ports:

@@ -1,4 +1,7 @@
 #!/bin/bash
+
+sed -i "s/listen = \/run\/php\/php7.2-fpm.sock/listen = 9000/" "/etc/php/7.2/fpm/pool.d/www.conf";
+
 # to install WP-CLI tool (tool which help to interact with WP from terminal commands)
 echo -e "\033[32m ...wp: INSTALL WP-CLI\033[0m";
 curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar;
@@ -16,8 +19,14 @@ mkdir -p /var/www/html/wordpress;
 # to change it's permission for installing 
 chmod o+w /var/www/html/wordpress;
 
+chown -R www-data /var/www/html/wordpress;
+mkdir -p /run/php/;
+touch /run/php/php7.3-fpm.pid;
+
 # to go to directory
 cd /var/www/html/wordpress;
+
+apt-get update -y && apt-get dist-upgrade -y && apt-get install default-mysql-client -y;
 
 # to downlode WP with using WP-CLI tool
 echo -e "\033[32m ...wp: DOWNLOAD WP:\033[0m";

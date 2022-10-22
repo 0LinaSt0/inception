@@ -1,20 +1,12 @@
 FROM debian:buster
 
-# to install the prerequisites for the next downloading of nginx
-RUN echo "\033[32m ...nginx: UPDATE INSTALLER:\033[0m" \
-	&& apt-get update \
-	&& echo "\033[32m ...nginx: INSTALL TOOLS(curl, gnupg2m, etc.):\033[0m" \
-	&& apt-get install curl \
-						gnupg2 \
-						ca-certificates \
-						lsb-release debian-archive-keyring -y;
+COPY ./tools/openssl_create.sh /home
 
-COPY ./tools/startnginx.sh /home/
+RUN apt-get update -y \
+	&& apt-get upgrade -y \
+	&& apt-get install nginx -y \
+	&& apt-get install openssl -y \
+	&& bash /home/openssl_create.sh
 
-RUN bash /home/startnginx.sh
-
-COPY ./conf/my_configs.conf /etc/nginx/conf.d/
-
-EXPOSE 443
-
-CMD service nginx start
+COPY ./conf/default /etc/nginx/sites-enabled/default
+CMD [ "nginx", "-g", "daemon off;"]

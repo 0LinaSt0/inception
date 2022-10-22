@@ -1,21 +1,29 @@
-sudo service docker restart #restart docker
+COMPOSE_FILE	=	./srcs/docker-compose.yml
+MARIADB_LOCAL	=	/home/msalena/data/mariadb
+WORDPRESS_LOCAL	=	/home/msalena/data/wordpress
 
-sudo docker-compose up -d # create docker_compose from all images and detach flag for running it background
-sudo docker-compose up -d --no-deps --build <service_name> #rebuild one image in docker-compose
-#--no-deps - Don't start linked services.
-#--build - Build images before starting containers.
+all:
+	mkdir -p $(WORDPRESS_LOCAL)
+	mkdir -p $(MARIADB_LOCAL)
+	cd ./srcs && sudo docker compose up --build
 
-sudo docker ps -a # show all images
+build:
+	cd ./srcs && sudo docker compose build
 
-docker rm -vf $(docker ps -aq) # to delete all containers including its volumes
-docker rmi -f $(docker images -aq) # to delete all the images
-docker system prune -a --volumes # to remov e all unused containers, volumes, networks and images
+stop_compose:
+	sudo docker compose -f $(COMPOSE_FILE) stop
 
-docker run --rm -it --entrypoint bash <ip-image> # create and run container with runing bash inside it and deleting it after work
+clean_images:
+	sudo docker compose -f $(COMPOSE_FILE) down
 
+clean_compose: 
+	sudo rm -rf $(WORDPRESS_LOCAL)
+	sudo rm -rf $(MARIADB_LOCAL)
+	sudo docker system prune -a --volumes
 
-STEPS:
-2. MAKEFILE
-3. ENV
-4. VOLUMES
-5. ADD PLUS ONE USER TO MARIADB
+clean_volumes:
+	sudo docker volume rm $$(sudo docker volume ls -q)
+
+fclean: clean_images clean_compose clean_volumes
+
+.PHONY: stop_compose clean_images clean_compose clean_volumes fclean

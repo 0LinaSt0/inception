@@ -1,60 +1,60 @@
-version: '3.9'
+version: "3"
+
 services:
   mariadb:
-    container_name: mariadb
+    image: mariadb
     build: ./requirements/mariadb
-    #volumes:
-    #  - db:/var/lib/mysql
-   # ports:
-    # - "3306:3306"
+    container_name: mariadb
     networks:
-      - inseption
+      - inception
+    volumes:
+      - mariadb:/var/lib/mysql
+    env_file: .env
     restart: always
 
   wordpress:
-    container_name: wordpress
+    image: wordpress
     build: ./requirements/wordpress
-    #volumes:
-     # - wp:/var/www/html/wordpress
-    ports:
-      - "9000:9000"
+    container_name: wordpress
     networks:
-      - inseption
+      - inception
+    volumes:
+      - wordpress:/var/www/html/wordpress
+    env_file: .env
     depends_on:
-      - mariadb
-    links:
       - mariadb
     restart: always
 
   nginx:
-    container_name: nginx
+    image: nginx
     build: ./requirements/nginx
-    #volumes:
-     # - wp:/var/www/html/wordpress
+    container_name: nginx
     networks:
-      - inseption
+      - inception
+    volumes:
+      - wordpress:/var/www/html/wordpress
+    env_file: .env
+    depends_on:
+      - wordpress
     ports:
       - "443:443"
-    links:
-      - wordpress
+    restart: always
 
 networks:
-  inseption:
+  inception:
     driver: bridge
 
-
 volumes:
-  db:
-    name: db
+  mariadb:
     driver: local
     driver_opts:
-      type: none
       o: bind
-      device: /home/msalena/data/db
-  wp:
-    name: wp
+      type: none
+      device: /home/msalena/data/mariadb
+  wordpress:
     driver: local
     driver_opts:
-      type: none
       o: bind
-      device: /home/msalena/data/wp
+      type: none
+      device: /home/msalena/data/wordpress
+

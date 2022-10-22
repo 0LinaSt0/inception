@@ -7,9 +7,6 @@ all:
 	mkdir -p $(MARIADB_LOCAL)
 	cd ./srcs && sudo docker compose up --build
 
-build:
-	cd ./srcs && sudo docker compose build
-
 stop_compose:
 	sudo docker compose -f $(COMPOSE_FILE) stop
 

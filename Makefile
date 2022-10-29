@@ -26,4 +26,4 @@ clean_volumes:
 
 fclean: clean_images clean_compose clean_volumes
 
-.PHONY: stop_compose clean_images clean_compose clean_volumes fclean
+.PHONY: stop_compose clean_images clean_compose clean_volumes fclean 
